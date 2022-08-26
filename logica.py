@@ -12,6 +12,6 @@ class Juegoreversi:
         self.jugador = turno
 
     def jugar(self, jugada):
-        self.tablero[jugada]=self.jugador   #tanblero[coordenada de jugada] = que jugador es para saber la ficha
+        self.tablero[jugada]=self.jugador   #tanblero[coordenada de jugada] = que jugador es para saber la ficha. aqui modifica el tablero lista
         self.jugador*=-1
 
