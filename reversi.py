@@ -40,8 +40,12 @@ class reversi:
             self.casillas.append(fila)
     
     def click(self, evento):
-        if (self.juego.tablero[evento.widget.x * 6 + evento.widget.y] == 0):
+        if ((self.juego.tablero[evento.widget.x * 6 + evento.widget.y] == 0) and (self.juego.jugador == -1)):
             self.juego.jugar(evento.widget.x * 6 + evento.widget.y)
             evento.widget["image"] = self.fichas_negras
+        else:
+            self.juego.jugar(evento.widget.x * 6 + evento.widget.y)
+            evento.widget["image"] = self.fichas_blancas
+        print(self.juego.tablero)
 juego = reversi()
 mainloop()

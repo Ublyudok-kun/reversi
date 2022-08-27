@@ -15,3 +15,5 @@ class Juegoreversi:
         self.tablero[jugada]=self.jugador   #tanblero[coordenada de jugada] = que jugador es para saber la ficha. aqui modifica el tablero lista
         self.jugador*=-1
 
+
+#la variable casillas es la matriz que muestra el tkinter, pero para el juego utilizaremos la lista tablero
