@@ -43,7 +43,8 @@ class reversi:
         if ((self.juego.tablero[evento.widget.x * 6 + evento.widget.y] == 0) and (self.juego.jugador == -1)):
             self.juego.jugar(evento.widget.x * 6 + evento.widget.y)
             evento.widget["image"] = self.fichas_negras
-        else:
+
+        elif ((self.juego.tablero[evento.widget.x * 6 + evento.widget.y] == 0) and (self.juego.jugador == 1)):
             self.juego.jugar(evento.widget.x * 6 + evento.widget.y)
             evento.widget["image"] = self.fichas_blancas
         print(self.juego.tablero)
