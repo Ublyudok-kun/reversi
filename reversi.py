@@ -3,13 +3,13 @@ import logica
 
 class reversi:
     def __init__(self):
-        self.principal = Tk()
+        self.principal = Toplevel()
         self.principal.title("reversi")
         self.principal.iconbitmap('./images/tom_cino.ico')
         self.casillas = []
         self.vacio = PhotoImage(file="./images/verde.png")
         self.fichas_blancas = PhotoImage(file="./images/ficha_white.png")
-        self.fichas_negras = PhotoImage(file="./images/ficha_nigga.png")
+        self.fichas_negras = PhotoImage(file="./images/ficha_negra.png")
         self.juego = logica.Juegoreversi()
         for i in range(6):
             fila=[]
@@ -40,13 +40,14 @@ class reversi:
             self.casillas.append(fila)
     
     def click(self, evento):
-        if ((self.juego.tablero[evento.widget.x * 6 + evento.widget.y] == 0) and (self.juego.jugador == -1)):
-            self.juego.jugar(evento.widget.x * 6 + evento.widget.y)
+        if ((self.juego.tablero[evento.widget.x][evento.widget.y] == 0) and (self.juego.jugador == -1)):
+            self.juego.jugar(evento.widget.x ,evento.widget.y)
             evento.widget["image"] = self.fichas_negras
 
-        elif ((self.juego.tablero[evento.widget.x * 6 + evento.widget.y] == 0) and (self.juego.jugador == 1)):
-            self.juego.jugar(evento.widget.x * 6 + evento.widget.y)
+        elif ((self.juego.tablero[evento.widget.x][evento.widget.y] == 0) and (self.juego.jugador == 1)):
+            self.juego.jugar(evento.widget.x ,evento.widget.y)
             evento.widget["image"] = self.fichas_blancas
         print(self.juego.tablero)
-juego = reversi()
-mainloop()
+
+# juego = reversi()
+# mainloop()
