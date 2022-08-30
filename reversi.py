@@ -13,7 +13,7 @@ class reversi:
         self.juego = logica.Juegoreversi(dimension)
 
         # Imagenes
-        self.principal.iconbitmap('./images/tom_cino.ico')
+        self.principal.iconbitmap('./images/chinese_tom.ico')
         self.vacio = PhotoImage(file="./images/verde.png")
         self.fichas_blancas = PhotoImage(file="./images/ficha_white.png")
         self.fichas_negras = PhotoImage(file="./images/ficha_negra.png")
@@ -54,7 +54,7 @@ class reversi:
                 elif (self.dimension == 8):
                     if ((i == 3 and j == 3) or (i == 4 and j == 4)):
                         b1 = Button(
-                            self.principal, image=self.fichas_blancas, width="50", height="50")
+                            self.principal, image=self.fichas_blancas, width="90", height="90")
                         b1.bind("<Button-1>", self.click)
                         b1.x = i
                         b1.y = j
@@ -63,7 +63,7 @@ class reversi:
 
                     elif ((i == 3 and j == 4) or (i == 4 and j == 3)):
                         b1 = Button(
-                            self.principal, image=self.fichas_negras, width="50", height="50")
+                            self.principal, image=self.fichas_negras, width="90", height="90")
                         b1.bind("<Button-1>", self.click)
                         b1.x = i
                         b1.y = j
@@ -71,7 +71,7 @@ class reversi:
                         fila.append(self.vacio)
 
                     else:
-                        b1 = Button(self.principal, image=self.vacio, width="50", height="50")
+                        b1 = Button(self.principal, image=self.vacio, width="90", height="90")
                         # evento del click pendiente
                         b1.bind("<Button-1>", self.click)
                         b1.x = i
@@ -85,8 +85,11 @@ class reversi:
             if self.juego.ganador == -1:
                 messagebox.showinfo("REVERSI", "Has ganado con {} fichas".format(self.juego.puntuacion[0]))
                 
+                
+                
             elif self.juego.ganador == 0:
                 messagebox.showinfo("REVERSI", "Empate")
+                self.principal.destroy()
             else:
                 messagebox.showinfo("REVERSI", "Has perdido con {} vs {} fichas".format(self.juego.puntuacion[0], self.juego.puntuacion[1]))
             #print(self.juego.puntuacion)
@@ -103,7 +106,7 @@ class reversi:
             self.juego.jugar(evento.widget.x, evento.widget.y)
             self.victoria()
         
-        #print(self.juego.tablero)
+        print(self.juego.tablero)
         #print(self.juego.puntuacion)
 
 

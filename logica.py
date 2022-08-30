@@ -26,6 +26,7 @@ class Juegoreversi:
             self.tablero[3][3] = 1
             self.tablero[2][3] = -1
             self.tablero[3][2] = -1
+            
         elif (dimension == 8):
             self.tablero[3][3] = 1
             self.tablero[4][4] = 1
@@ -66,6 +67,8 @@ class Juegoreversi:
             return True
         else:
             return False
+
+    
 
 
 # la variable casillas es la matriz que muestra el tkinter, pero para el juego utilizaremos la lista tablero

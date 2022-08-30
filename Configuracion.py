@@ -8,7 +8,7 @@ class Configuracion:
         # ventana del menu
         self.dprincipal = Tk()
         self.dprincipal.title("configuraciones")
-        self.dprincipal.iconbitmap = ("./images/tom_cino.ico")
+        self.dprincipal.iconbitmap = ("./images/chinese_tom.ico")
         self.dprincipal.geometry("300x150")
 
         # Label de las opciones dimension
@@ -40,7 +40,7 @@ class Configuracion:
         self.dimension = int(self.dimension_combo.get()[0])
         self.dificultad = self.dificultad_combo.get()
         #print(self.dimension, self.dificultad)
-        self.dprincipal.withdraw()
+        #self.dprincipal.withdraw()             mejor no poner esto, asi evitamos el que pueda aparecer denuevo cuando finalize el juego
         self.juego = reversi.reversi(self.dimension)
 
         # mainloop()
