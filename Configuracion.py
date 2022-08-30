@@ -42,7 +42,7 @@ class Configuracion:
         self.dificultad = self.dificultad_combo.get()
         #print(self.dimension, self.dificultad)
         self.dprincipal.withdraw()
-        self.juego = reversi.reversi()
+        self.juego = reversi.reversi(self.dimension)
         
         mainloop()
 

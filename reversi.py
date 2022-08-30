@@ -2,42 +2,72 @@ from tkinter import *
 import logica
 
 class reversi:
-    def __init__(self):
+    def __init__(self, dimension):
         self.principal = Toplevel()
         self.principal.title("reversi")
         self.principal.iconbitmap('./images/tom_cino.ico')
         self.casillas = []
+        self.dimension = dimension
         self.vacio = PhotoImage(file="./images/verde.png")
         self.fichas_blancas = PhotoImage(file="./images/ficha_white.png")
         self.fichas_negras = PhotoImage(file="./images/ficha_negra.png")
-        self.juego = logica.Juegoreversi()
-        for i in range(6):
+        self.juego = logica.Juegoreversi(dimension) 
+        for i in range(self.dimension):
             fila=[]
-            for j in range(6):
-                if ((i==2 and j==2) or (i==3 and j==3)):
-                    b1 = Button(self.principal, image=self.fichas_negras, width="100", height="100")
-                    b1.bind("<Button-1>", self.click)
-                    b1.x=i
-                    b1.y=j
-                    b1.grid(row=i,column=j)
-                    fila.append(self.vacio)
+            for j in range(self.dimension):
+                if(self.dimension == 6):
+                    if ((i==2 and j==2) or (i==3 and j==3)):
+                        b1 = Button(self.principal, image=self.fichas_blancas, width="100", height="100")
+                        b1.bind("<Button-1>", self.click)
+                        b1.x=i
+                        b1.y=j
+                        b1.grid(row=i,column=j)
+                        fila.append(self.vacio)
 
-                elif ((i==3 and j==2) or (i==2 and j==3)):
-                    b1 = Button(self.principal, image=self.fichas_blancas, width="100", height="100")
-                    b1.bind("<Button-1>", self.click)
-                    b1.x=i
-                    b1.y=j
-                    b1.grid(row=i,column=j)
-                    fila.append(self.vacio)
+                    elif ((i==3 and j==2) or (i==2 and j==3)):
+                        b1 = Button(self.principal, image=self.fichas_negras, width="100", height="100")
+                        b1.bind("<Button-1>", self.click)
+                        b1.x=i
+                        b1.y=j
+                        b1.grid(row=i,column=j)
+                        fila.append(self.vacio)
 
-                else:
-                    b1=Button(self.principal, image=self.vacio, width="100", height="100")
-                    b1.bind("<Button-1>",self.click) #evento del click pendiente
-                    b1.x=i
-                    b1.y=j
-                    b1.grid(row=i,column=j)
-                    fila.append(self.vacio)
-            self.casillas.append(fila)
+                    else:
+                        b1=Button(self.principal, image=self.vacio, width="100", height="100")
+                        b1.bind("<Button-1>",self.click) #evento del click pendiente
+                        b1.x=i
+                        b1.y=j
+                        b1.grid(row=i,column=j)
+                        fila.append(self.vacio)
+                    self.casillas.append(fila)
+
+                elif (self.dimension == 8):
+                    if ((i==3 and j==3) or (i==4 and j==4)):
+                        b1 = Button(self.principal, image=self.fichas_blancas, width="100", height="100")
+                        b1.bind("<Button-1>", self.click)
+                        b1.x=i
+                        b1.y=j
+                        b1.grid(row=i,column=j)
+                        fila.append(self.vacio)
+
+                    elif ((i==3 and j==4) or (i==4 and j==3)):
+                        b1 = Button(self.principal, image=self.fichas_negras, width="100", height="100")
+                        b1.bind("<Button-1>", self.click)
+                        b1.x=i
+                        b1.y=j
+                        b1.grid(row=i,column=j)
+                        fila.append(self.vacio)
+
+                    else:
+                        b1=Button(self.principal, image=self.vacio, width="100", height="100")
+                        b1.bind("<Button-1>",self.click) #evento del click pendiente
+                        b1.x=i
+                        b1.y=j
+                        b1.grid(row=i,column=j)
+                        fila.append(self.vacio)
+                    self.casillas.append(fila)
+
+
     
     def click(self, evento):
         if ((self.juego.tablero[evento.widget.x][evento.widget.y] == 0) and (self.juego.jugador == -1)):
