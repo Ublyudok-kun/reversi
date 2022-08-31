@@ -1,6 +1,8 @@
 #negro = -1
 #blanco = 1
 #vacio = 0
+import prueba
+
 
 class Juegoreversi:
     def __init__(self, dimension, turno=-1):
@@ -9,6 +11,7 @@ class Juegoreversi:
         self.puntuacion = [0, 0]
         self.completo = None
         self.ganador = None
+        
 
     def jugar(self, jugadax, jugaday):
         # tanblero[coordenada de jugada] = que jugador es para saber la ficha. aqui modifica el tablero lista
