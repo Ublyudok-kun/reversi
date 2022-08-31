@@ -61,7 +61,6 @@ class Juegoreversi:
 
     def estado_final(self):
         self.evaluar()
-
         if self.completo:
             self.contarFichas()
             return True
@@ -69,6 +68,6 @@ class Juegoreversi:
             return False
 
     
-
+    
 
 # la variable casillas es la matriz que muestra el tkinter, pero para el juego utilizaremos la lista tablero
