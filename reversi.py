@@ -29,8 +29,7 @@ class reversi:
             for j in range(self.dimension):
                 if (self.dimension == 6):
                     if ((i == 2 and j == 2) or (i == 3 and j == 3)):
-                        b1 = Button(
-                            self.principal, image=self.fichas_blancas, width="100", height="100")
+                        b1 = Button(self.principal, image=self.fichas_blancas, width="100", height="100")
                         b1.bind("<Button-1>", self.click)
                         b1.x = i
                         b1.y = j
@@ -86,6 +85,7 @@ class reversi:
                         fila.append(self.vacio)
                     self.casillas.append(fila)
 
+            
     def victoria(self):
         if self.juego.estado_final():
             if self.juego.ganador == -1:
@@ -207,13 +207,18 @@ class reversi:
 
             return self.jugadas_posibles
 
+        def get_key(valor):
+            for key, value in self.diccionario.items():
+                    if valor in value:
+                            return key
 
-                #probar esto
+
+        #convertir
         def convertir_arriba(tablero,x,y,xf,yf,turno):
             if(x>0 and x<self.dimension):
                 try:
                     #arriba
-                    if((tablero[x][y]  == tablero[xf][yf])):
+                    if((y==yf) and (x>xf)):
                         if((tablero[x-1][y] == (turno*-1))):
                             tablero[x-1][y] = turno
                             convertir_arriba(tablero,x-1,y,xf,yf,turno)
@@ -225,11 +230,117 @@ class reversi:
 
             return tablero
 
-        def get_key(valor):
-            for key, value in self.diccionario.items():
-                    if valor in value:
-                            return key
+        def convertir_derecha(tablero,x,y,xf,yf,turno):
+            if(y>=0 and y<self.dimension):
+                try:
+                    #derecha
+                    if((x == xf) and (yf>y)):
+                        if((tablero[x][y+1] == (turno*-1))):
+                            tablero[x][y+1] = turno
+                            convertir_derecha(tablero,x,y+1,xf,yf,turno)
 
+                    else:
+                        return tablero
+
+                except: IndexError
+
+            return tablero
+
+        def convertir_izquierda(tablero,x,y,xf,yf,turno):
+            if(y>=0 and y<self.dimension):
+                try:
+                    #izq
+                    if((x==xf) and (y>yf)):
+                        if((tablero[x][y-1] == (turno*-1))):
+                            tablero[x][y-1] = turno
+                            convertir_izquierda(tablero,x,y-1,xf,yf,turno)
+
+                    else:
+                        return tablero
+
+                except: IndexError
+
+            return tablero
+
+        def convertir_abajo(tablero,x,y,xf,yf,turno):
+            if(x>=0 and x<self.dimension):
+                try:
+                    #abajo
+                    if((y==yf) and (xf>x)):
+                        if((tablero[x+1][y] == (turno*-1))):
+                            tablero[x+1][y] = turno
+                            convertir_abajo(tablero,x+1,y,xf,yf,turno)
+
+                    else:
+                        return tablero
+
+                except: IndexError
+
+            return tablero
+
+        def convertir_superior_derecha(tablero,x,y,xf,yf,turno):
+            if((x>0 and x<self.dimension) and (y>=0 and y<self.dimension)):
+                try:
+                    #arriba der
+                    if((x>xf) and (yf>y)):
+                        if((tablero[x-1][y+1] == (turno*-1))):
+                            tablero[x-1][y+1] = turno
+                            convertir_superior_derecha(tablero,x-1,y+1,xf,yf,turno)
+
+                    else:
+                        return tablero
+
+                except: IndexError
+
+            return tablero
+
+        def convertir_superior_izquierda(tablero,x,y,xf,yf,turno):
+            if((x>0 and x<self.dimension) and (y>=0 and y<self.dimension)):
+                try:
+                    #arriba izq
+                    if((y>yf) and (x>xf)):
+                        if((tablero[x-1][y-1] == (turno*-1))):
+                            tablero[x-1][y-1] = turno
+                            convertir_superior_izquierda(tablero,x-1,y-1,xf,yf,turno)
+
+                    else:
+                        return tablero
+
+                except: IndexError
+
+            return tablero
+
+        def convertir_inferior_izquierda(tablero,x,y,xf,yf,turno):
+            if((x>=0 and x<self.dimension) and (y>=0 and y<self.dimension)):
+                try:
+                    #arriba
+                    if((xf>x) and (yf>y)):
+                        if((tablero[x+1][y-1] == (turno*-1))):
+                            tablero[x+1][y-1] = turno
+                            convertir_inferior_izquierda(tablero,x+1,y-1,xf,yf,turno)
+
+                    else:
+                        return tablero
+
+                except: IndexError
+
+            return tablero
+
+        def convertir_inferior_derecha(tablero,x,y,xf,yf,turno):
+            if((x>=0 and x<self.dimension) and (y>=0 and y<self.dimension)):
+                try:
+                    #abajo der
+                    if((xf > x) and (y>yf)):
+                        if((tablero[x+1][y+1] == (turno*-1))):
+                            tablero[x+1][y+1] = turno
+                            convertir_inferior_derecha(tablero,x+1,y+1,xf,yf,turno)
+
+                    else:
+                        return tablero
+
+                except: IndexError
+
+            return tablero
 
         for a in range(self.dimension):
             for b in range(self.dimension):
@@ -254,6 +365,20 @@ class reversi:
                 evento.widget["image"] = self.fichas_negras
                 self.juego.jugar(evento.widget.x, evento.widget.y)
                 self.juego.tablero = convertir_arriba(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
+                self.juego.tablero = convertir_derecha(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
+                self.juego.tablero = convertir_abajo(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
+                self.juego.tablero = convertir_izquierda(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
+                self.juego.tablero = convertir_superior_derecha(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
+                self.juego.tablero = convertir_inferior_derecha(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
+                self.juego.tablero = convertir_inferior_izquierda(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
+                self.juego.tablero = convertir_superior_izquierda(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
+                for b in range(self.dimension):
+                    for c in range(self.dimension):
+                        if (self.juego.tablero[b][c] == -1):
+                            self.casillas[b][c] = Button(self.principal, image=self.fichas_negras, width="100", height="100")
+                            self.casillas[b][c].x = b
+                            self.casillas[b][c].y = c
+                            self.casillas[b][c].grid(row=b, column=c)
                 print(self.jugadas_posibles)
                 #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
                 self.jugadas_posibles = []
@@ -262,15 +387,33 @@ class reversi:
                 evento.widget["image"] = self.fichas_blancas
                 self.juego.jugar(evento.widget.x, evento.widget.y)
                 self.juego.tablero = convertir_arriba(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, 1)
+                self.juego.tablero = convertir_derecha(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, 1)
+                self.juego.tablero = convertir_abajo(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, 1)
+                self.juego.tablero = convertir_izquierda(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, 1)
+                self.juego.tablero = convertir_superior_derecha(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, 1)
+                self.juego.tablero = convertir_inferior_derecha(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, 1)
+                self.juego.tablero = convertir_inferior_izquierda(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, 1)
+                self.juego.tablero = convertir_superior_izquierda(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, 1)
+                for b in range(self.dimension):
+                    for c in range(self.dimension):
+                        if (self.juego.tablero[b][c] == 1):
+                            self.casillas[b][c] = Button(self.principal, image=self.fichas_blancas, width="100", height="100")
+                            self.casillas[b][c].x = b
+                            self.casillas[b][c].y = c
+                            self.casillas[b][c].grid(row=b, column=c)
+
                 print(self.jugadas_posibles)
                 #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
                 self.jugadas_posibles = []
                 self.diccionario = {}
             #self.juego.jugar(evento.widget.x, evento.widget.y)
             self.victoria()
+
         
         self.jugadas_posibles = []
         self.diccionario = {}
+        
+        
         
         print(self.juego.tablero)
         #print(self.juego.puntuacion)
