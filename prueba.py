@@ -121,19 +121,21 @@ def revisar_superior_izquierda(tablero, x, y, turno):
 for i in range(dimension):
     for j in range(dimension):
         if(a[i][j] == turno): #si encuentra una ficha negra
-            revisar_arriba(a, i, j, turno)
-            revisar_abajo(a, i, j, turno)
-            revisar_derecha(a, i, j, turno)
-            revisar_izquierda(a, i, j, turno)
-            revisar_superior_derecha(a, i, j, turno)
-            revisar_inferior_derecha(a, i, j, turno)
-            revisar_inferior_izquierda(a, i, j, turno)
-            revisar_superior_izquierda(a, i, j, turno)
-            diccionario[(i,j)] = jugadas_posibles
-            jugadas_posibles = []
+            try:
+                revisar_arriba(a, i, j, turno)
+                revisar_abajo(a, i, j, turno)
+                revisar_derecha(a, i, j, turno)
+                revisar_izquierda(a, i, j, turno)
+                revisar_superior_derecha(a, i, j, turno)
+                revisar_inferior_derecha(a, i, j, turno)
+                revisar_inferior_izquierda(a, i, j, turno)
+                revisar_superior_izquierda(a, i, j, turno)
+                diccionario[(i,j)] = jugadas_posibles
+                jugadas_posibles = []
+            except: IndexError
 
 #print(jugadas_posibles)
-print(dimension)
+#print(dimension)
 print(diccionario)
 
 # diccionario = {(1,2): [1,2,3,4], "key2": [(1,2),(3,4)]} #esto funciona
@@ -158,21 +160,30 @@ def get_key(valor):
                         return key
 
 
-print(get_key((1,2))[0])
+#print(get_key((1,2))[0])
 
 #probar esto
-        def convertir_arriba(tablero,x,y,xf,yf,turno):
-            if(x>0 and x<self.dimension):
-                try:
-                    #arriba
-                    if((tablero[x][y]  == tablero[xf][yf])):
-                        if((tablero[x-1][y] == (turno*-1))):
-                            tablero[x-1][y] = turno
-                            convertir_arriba(tablero,x-1,y,xf,yf,turno)
+def convertir_arriba(tablero,x,y,xf,yf,turno):
+    if(x>0 and x<dimension):
+        try:
+            #arriba
+            if((tablero[x][y]  == tablero[xf][yf])):
+                if((tablero[x-1][y] == (turno*-1))):
+                    tablero[x-1][y] = turno
+                    convertir_arriba(tablero,x-1,y,xf,yf,turno)
 
-                    else:
-                        return tablero
+            else:
+                return tablero
 
-                except: IndexError
+        except: IndexError
 
-            return tablero
+    return tablero
+
+
+print(list(diccionario.values()))
+
+for y in list(diccionario.values()):
+    for z in y:
+        print(z)
+
+        #ojo despues reiniciar el diccionario

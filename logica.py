@@ -1,7 +1,7 @@
 #negro = -1
 #blanco = 1
 #vacio = 0
-import prueba
+
 
 
 class Juegoreversi:

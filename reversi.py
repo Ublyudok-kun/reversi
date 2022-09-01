@@ -14,6 +14,7 @@ class reversi:
         self.dimension = dimension
         self.juego = logica.Juegoreversi(dimension)
         self.jugadas_posibles = []
+        self.diccionario = {}
 
         # Imagenes
         self.principal.iconbitmap('./images/chinese_tom.ico')
@@ -207,6 +208,29 @@ class reversi:
             return self.jugadas_posibles
 
 
+                #probar esto
+        def convertir_arriba(tablero,x,y,xf,yf,turno):
+            if(x>0 and x<self.dimension):
+                try:
+                    #arriba
+                    if((tablero[x][y]  == tablero[xf][yf])):
+                        if((tablero[x-1][y] == (turno*-1))):
+                            tablero[x-1][y] = turno
+                            convertir_arriba(tablero,x-1,y,xf,yf,turno)
+
+                    else:
+                        return tablero
+
+                except: IndexError
+
+            return tablero
+
+        def get_key(valor):
+            for key, value in self.diccionario.items():
+                    if valor in value:
+                            return key
+
+
         for a in range(self.dimension):
             for b in range(self.dimension):
                 if(self.juego.tablero[a][b] == self.juego.jugador):
@@ -218,16 +242,35 @@ class reversi:
                     revisar_inferior_derecha(self.juego.tablero, a, b, self.juego.jugador)
                     revisar_inferior_izquierda(self.juego.tablero, a, b, self.juego.jugador)
                     revisar_superior_izquierda(self.juego.tablero, a, b, self.juego.jugador)
+                    self.diccionario[(a,b)] = self.jugadas_posibles
+                    self.jugadas_posibles = []
+        
+        for y in list(self.diccionario.values()):
+            for z in y:
+                self.jugadas_posibles.append(z)
 
         if (self.juego.tablero[evento.widget.x][evento.widget.y] == 0 and ((evento.widget.x, evento.widget.y)) in self.jugadas_posibles):
             if self.juego.jugador == -1:
                 evento.widget["image"] = self.fichas_negras
+                self.juego.jugar(evento.widget.x, evento.widget.y)
+                self.juego.tablero = convertir_arriba(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
+                print(self.jugadas_posibles)
+                #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
                 self.jugadas_posibles = []
+                self.diccionario = {}
             else:
                 evento.widget["image"] = self.fichas_blancas
+                self.juego.jugar(evento.widget.x, evento.widget.y)
+                self.juego.tablero = convertir_arriba(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, 1)
+                print(self.jugadas_posibles)
+                #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
                 self.jugadas_posibles = []
-            self.juego.jugar(evento.widget.x, evento.widget.y)
+                self.diccionario = {}
+            #self.juego.jugar(evento.widget.x, evento.widget.y)
             self.victoria()
+        
+        self.jugadas_posibles = []
+        self.diccionario = {}
         
         print(self.juego.tablero)
         #print(self.juego.puntuacion)
