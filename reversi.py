@@ -29,7 +29,7 @@ class reversi:
             for j in range(self.dimension):
                 if (self.dimension == 6):
                     if ((i == 2 and j == 2) or (i == 3 and j == 3)):
-                        b1 = Button(self.principal, image=self.fichas_blancas, width="100", height="100")
+                        b1 = Button(self.principal, image=self.fichas_blancas, width="80", height="80")
                         b1.bind("<Button-1>", self.click)
                         b1.x = i
                         b1.y = j
@@ -38,7 +38,7 @@ class reversi:
 
                     elif ((i == 3 and j == 2) or (i == 2 and j == 3)):
                         b1 = Button(
-                            self.principal, image=self.fichas_negras, width="100", height="100")
+                            self.principal, image=self.fichas_negras, width="80", height="80")
                         b1.bind("<Button-1>", self.click)
                         b1.x = i
                         b1.y = j
@@ -47,7 +47,7 @@ class reversi:
 
                     else:
                         b1 = Button(self.principal, image=self.vacio,
-                                    width="100", height="100")
+                                    width="80", height="80")
                         # evento del click pendiente
                         b1.bind("<Button-1>", self.click)
                         b1.x = i
@@ -59,7 +59,7 @@ class reversi:
                 elif (self.dimension == 8):
                     if ((i == 3 and j == 3) or (i == 4 and j == 4)):
                         b1 = Button(
-                            self.principal, image=self.fichas_blancas, width="90", height="90")
+                            self.principal, image=self.fichas_blancas, width="80", height="80")
                         b1.bind("<Button-1>", self.click)
                         b1.x = i
                         b1.y = j
@@ -68,7 +68,7 @@ class reversi:
 
                     elif ((i == 3 and j == 4) or (i == 4 and j == 3)):
                         b1 = Button(
-                            self.principal, image=self.fichas_negras, width="90", height="90")
+                            self.principal, image=self.fichas_negras, width="80", height="80")
                         b1.bind("<Button-1>", self.click)
                         b1.x = i
                         b1.y = j
@@ -76,7 +76,7 @@ class reversi:
                         fila.append(self.vacio)
 
                     else:
-                        b1 = Button(self.principal, image=self.vacio, width="90", height="90")
+                        b1 = Button(self.principal, image=self.vacio, width="80", height="80")
                         # evento del click pendiente
                         b1.bind("<Button-1>", self.click)
                         b1.x = i
@@ -208,9 +208,11 @@ class reversi:
             return self.jugadas_posibles
 
         def get_key(valor):
+            #keys = []
             for key, value in self.diccionario.items():
                     if valor in value:
-                            return key
+                        #keys.append(key)
+                        return key
 
 
         #convertir
@@ -314,7 +316,7 @@ class reversi:
             if((x>=0 and x<self.dimension) and (y>=0 and y<self.dimension)):
                 try:
                     #arriba
-                    if((xf>x) and (yf>y)):
+                    if((xf>x) and (yf<y)):
                         if((tablero[x+1][y-1] == (turno*-1))):
                             tablero[x+1][y-1] = turno
                             convertir_inferior_izquierda(tablero,x+1,y-1,xf,yf,turno)
@@ -330,7 +332,7 @@ class reversi:
             if((x>=0 and x<self.dimension) and (y>=0 and y<self.dimension)):
                 try:
                     #abajo der
-                    if((xf > x) and (y>yf)):
+                    if((xf > x) and (y<yf)):
                         if((tablero[x+1][y+1] == (turno*-1))):
                             tablero[x+1][y+1] = turno
                             convertir_inferior_derecha(tablero,x+1,y+1,xf,yf,turno)
@@ -364,6 +366,8 @@ class reversi:
             if self.juego.jugador == -1:
                 evento.widget["image"] = self.fichas_negras
                 self.juego.jugar(evento.widget.x, evento.widget.y)
+
+
                 self.juego.tablero = convertir_arriba(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
                 self.juego.tablero = convertir_derecha(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
                 self.juego.tablero = convertir_abajo(self.juego.tablero, get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1], evento.widget.x, evento.widget.y, -1)
@@ -375,7 +379,7 @@ class reversi:
                 for b in range(self.dimension):
                     for c in range(self.dimension):
                         if (self.juego.tablero[b][c] == -1):
-                            self.casillas[b][c] = Button(self.principal, image=self.fichas_negras, width="100", height="100")
+                            self.casillas[b][c] = Button(self.principal, image=self.fichas_negras, width="80", height="80")
                             self.casillas[b][c].x = b
                             self.casillas[b][c].y = c
                             self.casillas[b][c].grid(row=b, column=c)
@@ -397,7 +401,7 @@ class reversi:
                 for b in range(self.dimension):
                     for c in range(self.dimension):
                         if (self.juego.tablero[b][c] == 1):
-                            self.casillas[b][c] = Button(self.principal, image=self.fichas_blancas, width="100", height="100")
+                            self.casillas[b][c] = Button(self.principal, image=self.fichas_blancas, width="80", height="80")
                             self.casillas[b][c].x = b
                             self.casillas[b][c].y = c
                             self.casillas[b][c].grid(row=b, column=c)
