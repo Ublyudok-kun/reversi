@@ -144,7 +144,7 @@ class reversi:
             return self.jugadas_posibles
 
         def revisar_izquierda(tablero, x, y, turno):
-            if(y>=0 and y<self.dimension):
+            if(y>0 and y<self.dimension):
                 try:
                     #izquierda
                     if(tablero[x][y-1] == 0 and tablero[x][y] == (turno*-1)):
@@ -183,7 +183,7 @@ class reversi:
             return self.jugadas_posibles
 
         def revisar_inferior_izquierda(tablero, x, y, turno):
-            if((x>=0 and x<self.dimension) and (y>=0 and y<self.dimension)):
+            if((x>=0 and x<self.dimension) and (y>0 and y<self.dimension)):
                 try:
                     #diagonal inferior izquierda
                     if(tablero[x+1][y-1] == 0 and tablero[x][y] == (turno*-1)):
@@ -196,7 +196,7 @@ class reversi:
             return self.jugadas_posibles
 
         def revisar_superior_izquierda(tablero, x, y, turno):
-            if((x>0 and x<self.dimension) and (y>=0 and y<self.dimension)):
+            if((x>0 and x<self.dimension) and (y>0 and y<self.dimension)):
                 try:
                     #diagonal superior izquierdo
                     if(tablero[x-1][y-1] == 0 and tablero[x][y] == (turno*-1)):
@@ -362,7 +362,7 @@ class reversi:
         for y in list(self.diccionario.values()):
             for z in y:
                 self.jugadas_posibles.append(z)
-
+        print(self.jugadas_posibles)
         if (self.juego.tablero[evento.widget.x][evento.widget.y] == 0 and ((evento.widget.x, evento.widget.y)) in self.jugadas_posibles):
             if self.juego.jugador == -1:
                 evento.widget["image"] = self.fichas_negras
@@ -391,7 +391,9 @@ class reversi:
                 #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
                 self.jugadas_posibles = []
                 self.diccionario = {}
-            else:
+
+
+            elif(self.juego.jugador == 1):
                 evento.widget["image"] = self.fichas_blancas
                 self.juego.jugar(evento.widget.x, evento.widget.y)
                 self.jugadas_compartidas = get_key((evento.widget.x, evento.widget.y))
@@ -419,8 +421,11 @@ class reversi:
                 #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
                 self.jugadas_posibles = []
                 self.diccionario = {}
+            
             #self.juego.jugar(evento.widget.x, evento.widget.y)
             self.victoria()
+
+
 
         
         self.jugadas_posibles = []
