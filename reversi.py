@@ -91,12 +91,13 @@ class reversi:
         if self.juego.estado_final():
             if self.juego.ganador == -1:
                 messagebox.showinfo("REVERSI", "Has ganado con {} fichas".format(self.juego.puntuacion[0]))
-                
+                self.principal.destroy()
             elif self.juego.ganador == 0:
                 messagebox.showinfo("REVERSI", "Empate")
                 self.principal.destroy()
             else:
                 messagebox.showinfo("REVERSI", "Has perdido con {} vs {} fichas".format(self.juego.puntuacion[0], self.juego.puntuacion[1]))
+                self.principal.destroy()
             #print(self.juego.puntuacion)
             return True
         else:
@@ -359,6 +360,10 @@ class reversi:
                     self.diccionario[(a,b)] = self.jugadas_posibles
                     self.jugadas_posibles = []
         
+
+
+
+
         for y in list(self.diccionario.values()):
             for z in y:
                 self.jugadas_posibles.append(z)
@@ -391,9 +396,7 @@ class reversi:
                 #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
                 self.jugadas_posibles = []
                 self.diccionario = {}
-
-
-            elif(self.juego.jugador == 1):
+            else:
                 evento.widget["image"] = self.fichas_blancas
                 self.juego.jugar(evento.widget.x, evento.widget.y)
                 self.jugadas_compartidas = get_key((evento.widget.x, evento.widget.y))
@@ -421,12 +424,12 @@ class reversi:
                 #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
                 self.jugadas_posibles = []
                 self.diccionario = {}
-            
             #self.juego.jugar(evento.widget.x, evento.widget.y)
             self.victoria()
-
-
-
+        else:
+            if(len(self.jugadas_posibles) == 0):
+                messagebox.showinfo("REVERSI", "El jugador {} no tiene jugadas posibles. \nCambio de Turno".format(self.juego.jugador))
+                self.juego.jugador= self.juego.jugador*-1
         
         self.jugadas_posibles = []
         self.diccionario = {}
