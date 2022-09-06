@@ -13,9 +13,7 @@ class reversi:
         self.casillas = []
         self.dimension = dimension
         self.juego = logica.Juegoreversi(dimension)
-        self.jugadas_posibles = []
-        self.diccionario = {}
-        self.jugadas_compartidas = []
+        
 
         # Imagenes
         self.principal.iconbitmap('./images/chinese_tom.ico')
@@ -103,115 +101,11 @@ class reversi:
         else:
             return False
 
-    def click(self, evento):
-        def revisar_arriba(tablero,x, y, turno):
-            if(x>0 and x<self.dimension):
-                    try:
-                        #arriba
-                        if((tablero[x-1][y] == 0 and tablero[x][y] == (turno*-1))):
-                            self.jugadas_posibles.append((x-1, y))
-                                
-                        elif(tablero[x-1][y] == (turno*-1)):
-                            revisar_arriba(tablero, x-1, y, turno)
-
-                    except: IndexError
-                        
-                    return self.jugadas_posibles
-
-        def revisar_abajo(tablero, x, y, turno):
-            if(x>=0 and x<self.dimension):
-                try:
-                    #abajo
-                    if(tablero[x+1][y] == 0 and tablero[x][y] == (turno*-1)):
-                        self.jugadas_posibles.append((x+1,y)) 
-
-                    elif(tablero[x+1][y] == (turno*-1)):
-                        revisar_abajo(tablero, x+1, y, turno)
-                except: IndexError
-
-            return self.jugadas_posibles
-
-        def revisar_derecha(tablero, x, y, turno):
-            if(y>=0 and y<self.dimension):
-                try:
-                    #derecha
-                    if(tablero[x][y+1] == 0 and tablero[x][y] == (turno*-1)):
-                        self.jugadas_posibles.append((x,y+1))
-                    
-                    elif(tablero[x][y+1] == (turno*-1)):
-                        revisar_derecha(tablero, x, y+1, turno)
-                except: IndexError
-
-            return self.jugadas_posibles
-
-        def revisar_izquierda(tablero, x, y, turno):
-            if(y>0 and y<self.dimension):
-                try:
-                    #izquierda
-                    if(tablero[x][y-1] == 0 and tablero[x][y] == (turno*-1)):
-                        self.jugadas_posibles.append((x,y-1))
-                    
-                    elif(tablero[x][y-1] == (turno*-1)):
-                        revisar_izquierda(tablero, x, y-1, turno)
-                except: IndexError
-
-            return self.jugadas_posibles
-
-        def revisar_superior_derecha(tablero, x, y, turno):
-            if((x>0 and x<self.dimension) and (y>=0 and y<self.dimension)):
-                try:
-                    #diagonal superior derecha
-                    if(tablero[x-1][y+1] == 0 and tablero[x][y] == (turno*-1)):
-                        self.jugadas_posibles.append((x-1,y+1))
-                    
-                    elif(tablero[x-1][y+1] == (turno*-1)):
-                        revisar_superior_derecha(tablero, x-1, y+1, turno)
-                except: IndexError
-
-            return self.jugadas_posibles
-
-        def revisar_inferior_derecha(tablero, x, y, turno):
-            if((x>=0 and x<self.dimension) and (y>=0 and y<self.dimension)):
-                try:
-                    #diagonal inferior derecha
-                    if(tablero[x+1][y+1] == 0 and tablero[x][y] == (turno*-1)):
-                        self.jugadas_posibles.append((x+1,y+1))
-                    
-                    elif(tablero[x+1][y+1] == (turno*-1)):
-                        revisar_inferior_derecha(tablero, x+1, y+1, turno)
-                except: IndexError
-
-            return self.jugadas_posibles
-
-        def revisar_inferior_izquierda(tablero, x, y, turno):
-            if((x>=0 and x<self.dimension) and (y>0 and y<self.dimension)):
-                try:
-                    #diagonal inferior izquierda
-                    if(tablero[x+1][y-1] == 0 and tablero[x][y] == (turno*-1)):
-                        self.jugadas_posibles.append((x+1,y-1))
-                    
-                    elif(tablero[x+1][y-1] == (turno*-1)):
-                        revisar_inferior_izquierda(tablero, x+1, y-1, turno)
-                except: IndexError
-
-            return self.jugadas_posibles
-
-        def revisar_superior_izquierda(tablero, x, y, turno):
-            if((x>0 and x<self.dimension) and (y>0 and y<self.dimension)):
-                try:
-                    #diagonal superior izquierdo
-                    if(tablero[x-1][y-1] == 0 and tablero[x][y] == (turno*-1)):
-                        self.jugadas_posibles.append((x-1,y-1))
-                    
-                    elif(tablero[x-1][y-1] == (turno*-1)):
-                        revisar_superior_izquierda(tablero, x-1, y-1, turno)
-                except: IndexError
-
-            return self.jugadas_posibles
+    def click(self, evento):    
 
         def get_key(valor):
             keys = []
-            for key, value in self.diccionario.items():
+            for key, value in self.juego.diccionario.items():
                     if valor in value:
                         keys.append(key)
             return keys
@@ -346,29 +240,17 @@ class reversi:
 
             return tablero
 
-        for a in range(self.dimension):
-            for b in range(self.dimension):
-                if(self.juego.tablero[a][b] == self.juego.jugador):
-                    revisar_arriba(self.juego.tablero, a, b, self.juego.jugador)
-                    revisar_abajo(self.juego.tablero, a, b, self.juego.jugador)
-                    revisar_derecha(self.juego.tablero, a, b, self.juego.jugador)
-                    revisar_izquierda(self.juego.tablero, a, b, self.juego.jugador)
-                    revisar_superior_derecha(self.juego.tablero, a, b, self.juego.jugador)
-                    revisar_inferior_derecha(self.juego.tablero, a, b, self.juego.jugador)
-                    revisar_inferior_izquierda(self.juego.tablero, a, b, self.juego.jugador)
-                    revisar_superior_izquierda(self.juego.tablero, a, b, self.juego.jugador)
-                    self.diccionario[(a,b)] = self.jugadas_posibles
-                    self.jugadas_posibles = []
         
+        self.juego.diccionario = self.juego.revisar_jugadas()
 
 
-
-
-        for y in list(self.diccionario.values()):
+        for y in list(self.juego.diccionario.values()):
             for z in y:
-                self.jugadas_posibles.append(z)
-        print(self.jugadas_posibles)
-        if (self.juego.tablero[evento.widget.x][evento.widget.y] == 0 and ((evento.widget.x, evento.widget.y)) in self.jugadas_posibles):
+                self.juego.jugadas_posibles.append(z)
+
+        print(self.juego.jugadas_posibles)
+
+        if (self.juego.tablero[evento.widget.x][evento.widget.y] == 0 and ((evento.widget.x, evento.widget.y)) in self.juego.jugadas_posibles):
             if self.juego.jugador == -1:
                 evento.widget["image"] = self.fichas_negras
                 self.juego.jugar(evento.widget.x, evento.widget.y)
@@ -394,8 +276,8 @@ class reversi:
                             self.casillas[b][c].grid(row=b, column=c)
                 #print(self.jugadas_posibles)
                 #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
-                self.jugadas_posibles = []
-                self.diccionario = {}
+                self.juego.jugadas_posibles = []
+                self.juego.diccionario = {}
             else:
                 evento.widget["image"] = self.fichas_blancas
                 self.juego.jugar(evento.widget.x, evento.widget.y)
@@ -422,17 +304,17 @@ class reversi:
 
                 #print(self.jugadas_posibles)
                 #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
-                self.jugadas_posibles = []
-                self.diccionario = {}
+                self.juego.jugadas_posibles = []
+                self.juego.diccionario = {}
             #self.juego.jugar(evento.widget.x, evento.widget.y)
             self.victoria()
         else:
-            if(len(self.jugadas_posibles) == 0):
+            if(len(self.juego.jugadas_posibles) == 0):
                 messagebox.showinfo("REVERSI", "El jugador {} no tiene jugadas posibles. \nCambio de Turno".format(self.juego.jugador))
                 self.juego.jugador= self.juego.jugador*-1
         
-        self.jugadas_posibles = []
-        self.diccionario = {}
+        self.juego.jugadas_posibles = []
+        self.juego.diccionario = {}
         
         
         
