@@ -28,7 +28,7 @@ class Configuracion:
         # Drop opciones de la dificultad
         self.dificultad_combo = Combobox(self.dprincipal, state="readonly")
         self.dificultad_combo.place(x=150, y=50)
-        self.dificultad_combo["values"] = ("Fácil", "Normal", "Difícil")
+        self.dificultad_combo["values"] = ("Easy", "Normal", "Hard")
         self.dificultad_combo.current(1)
 
         # boton OK
@@ -41,7 +41,7 @@ class Configuracion:
         self.dificultad = self.dificultad_combo.get()
         #print(self.dimension, self.dificultad)
         #self.dprincipal.withdraw()             mejor no poner esto, asi evitamos el que pueda aparecer denuevo cuando finalize el juego
-        self.juego = reversi.reversi(self.dimension)
+        self.juego = reversi.reversi(self.dimension, self.dificultad)
 
         # mainloop()
 

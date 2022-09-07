@@ -6,13 +6,28 @@ import logica
 
 
 class reversi:
-    def __init__(self, dimension):
+    def __init__(self, dimension, dificultad):
         # Tablero
         self.principal = Toplevel()
         self.principal.title("Reversi")
         self.casillas = []
         self.dimension = dimension
-        self.juego = logica.Juegoreversi(dimension)
+        if(self.dimension == 6):
+            self.principal.geometry("680x520")
+        else:
+            self.principal.geometry("850x690")
+        self.dificultad = dificultad
+        self.juego = logica.Juegoreversi(self.dimension, self.dificultad)
+
+        #LABELS
+        #turno jugador
+        if((self.juego.jugador == -1) and self.dimension == 6):
+            self.turno_label = Label(self.principal, text="turno del jugador: negro")
+            self.turno_label.place(x=520, y=10)
+
+        elif((self.juego.jugador == -1) and self.dimension == 8):
+            self.turno_label = Label(self.principal, text="turno del jugador: negro")
+            self.turno_label.place(x=700, y=10)
         
 
         # Imagenes
@@ -84,6 +99,8 @@ class reversi:
                         fila.append(self.vacio)
                     self.casillas.append(fila)
 
+        self.juego.diccionario, self.juego.jugadas_posibles = self.juego.revisar_jugadas()
+        print("posibles jugadas: {}".format(self.juego.jugadas_posibles))
             
     def victoria(self):
         if self.juego.estado_final():
@@ -101,7 +118,11 @@ class reversi:
         else:
             return False
 
+        
+
     def click(self, evento):    
+        
+
 
         def get_key(valor):
             keys = []
@@ -240,20 +261,35 @@ class reversi:
 
             return tablero
 
+        self.juego.diccionario = {}
+        self.juego.jugadas_posibles = []
+
+        self.juego.diccionario, self.juego.jugadas_posibles = self.juego.revisar_jugadas()
+
+        #print(self.juego.jugadas_posibles)
         
-        self.juego.diccionario = self.juego.revisar_jugadas()
 
-
-        for y in list(self.juego.diccionario.values()):
-            for z in y:
-                self.juego.jugadas_posibles.append(z)
-
-        print(self.juego.jugadas_posibles)
+        
 
         if (self.juego.tablero[evento.widget.x][evento.widget.y] == 0 and ((evento.widget.x, evento.widget.y)) in self.juego.jugadas_posibles):
             if self.juego.jugador == -1:
                 evento.widget["image"] = self.fichas_negras
                 self.juego.jugar(evento.widget.x, evento.widget.y)
+                #LABELS
+                #turno jugador
+                self.turno_label.destroy()
+                if ((self.juego.jugador == 1) and self.dimension == 6):
+                    self.turno_label = Label(self.principal, text="turno del jugador: blanco")
+                    self.turno_label.place(x=520, y=10)
+                elif ((self.juego.jugador == 1) and self.dimension == 8):
+                    self.turno_label = Label(self.principal, text = "turno del jugador: blanco")
+                    self.turno_label.place(x=700, y=10)
+                elif ((self.juego.jugador == -1) and self.dimension == 6):
+                    self.turno_label = Label(self.principal, text = "turno del jugador: negro")
+                    self.turno_label.place(x=520, y=10)
+                elif ((self.juego.jugador == -1) and self.dimension == 8):
+                    self.turno_label = Label(self.principal, text = "turno del jugador: negro")
+                    self.turno_label.place(x=700, y=10)
                 self.jugadas_compartidas = get_key((evento.widget.x, evento.widget.y))
 
                 for d in self.jugadas_compartidas:
@@ -276,11 +312,27 @@ class reversi:
                             self.casillas[b][c].grid(row=b, column=c)
                 #print(self.jugadas_posibles)
                 #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
-                self.juego.jugadas_posibles = []
-                self.juego.diccionario = {}
+                #self.juego.jugadas_posibles = []
+                #self.juego.diccionario = {}
             else:
                 evento.widget["image"] = self.fichas_blancas
                 self.juego.jugar(evento.widget.x, evento.widget.y)
+                #LABELS
+                #turno jugador
+                self.turno_label.destroy()
+                if ((self.juego.jugador == 1) and self.dimension == 6):
+                    self.turno_label = Label(self.principal, text="turno del jugador: blanco")
+                    self.turno_label.place(x=520, y=10)
+                elif ((self.juego.jugador == 1) and self.dimension == 8):
+                    self.turno_label = Label(self.principal, text = "turno del jugador: blanco")
+                    self.turno_label.place(x=700, y=10)
+                elif ((self.juego.jugador == -1) and self.dimension == 6):
+                    self.turno_label = Label(self.principal, text = "turno del jugador: negro")
+                    self.turno_label.place(x=520, y=10)
+                elif ((self.juego.jugador == -1) and self.dimension == 8):
+                    self.turno_label = Label(self.principal, text = "turno del jugador: negro")
+                    self.turno_label.place(x=700, y=10)
+            
                 self.jugadas_compartidas = get_key((evento.widget.x, evento.widget.y))
                 for d in self.jugadas_compartidas:
                     self.juego.tablero = convertir_arriba(self.juego.tablero, d[0], d[1], evento.widget.x, evento.widget.y, 1)
@@ -304,17 +356,20 @@ class reversi:
 
                 #print(self.jugadas_posibles)
                 #print(get_key((evento.widget.x, evento.widget.y))[0], get_key((evento.widget.x, evento.widget.y))[1])
-                self.juego.jugadas_posibles = []
-                self.juego.diccionario = {}
+                #self.juego.jugadas_posibles = []
+                #self.juego.diccionario = {}
             #self.juego.jugar(evento.widget.x, evento.widget.y)
             self.victoria()
         else:
             if(len(self.juego.jugadas_posibles) == 0):
                 messagebox.showinfo("REVERSI", "El jugador {} no tiene jugadas posibles. \nCambio de Turno".format(self.juego.jugador))
                 self.juego.jugador= self.juego.jugador*-1
-        
+
         self.juego.jugadas_posibles = []
         self.juego.diccionario = {}
+
+        self.juego.diccionario, self.juego.jugadas_posibles = self.juego.revisar_jugadas()
+        print("posibles jugadas: {}".format(self.juego.jugadas_posibles))
         
         
         

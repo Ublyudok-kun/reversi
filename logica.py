@@ -1,24 +1,31 @@
 #negro = -1
 #blanco = 1
 #vacio = 0
+import numpy as np
 
 
 
 class Juegoreversi:
-    def __init__(self, dimension, turno=-1):
+    def __init__(self, dimension, dificultad, turno=-1):
         self.tablero = self.crear_tablero(dimension)
         self.dimension = dimension
+        self.dificultad = dificultad
         self.jugador = turno
         self.puntuacion = [0, 0]
         self.completo = None
         self.ganador = None
         self.diccionario = {}
         self.jugadas_posibles = []
+        self.contador_de_profundidad = 0
         
 
     def jugar(self, jugadax, jugaday):
         # tanblero[coordenada de jugada] = que jugador es para saber la ficha. aqui modifica el tablero lista
         self.tablero[jugadax][jugaday] = self.jugador
+        self.jugador *= -1
+
+    def deshacer_jugada(self, jugadax, jugaday):
+        self.tablero[jugadax][jugaday] = 0
         self.jugador *= -1
 
     def reiniciar(self, dimension):
@@ -162,7 +169,11 @@ class Juegoreversi:
                     self.diccionario[(a,b)] = self.jugadas_posibles
                     self.jugadas_posibles = []
 
-        return self.diccionario
+        for y in list(self.diccionario.values()):
+            for z in y:
+                self.jugadas_posibles.append(z)
+
+        return self.diccionario, self.jugadas_posibles
 
     def contarFichas(self):
         if self.puntuacion[0] > self.puntuacion[1]:
@@ -172,6 +183,21 @@ class Juegoreversi:
         else:
             self.ganador = 1
 
+    def calcular_utilidad(self):                      #esta funcion para calcular la utilidad
+        for i in self.tablero:
+            self.puntuacion[0] += i.count(-1)
+            self.puntuacion[1] += i.count(1)
+        if (self.puntuacion[0] > self.puntuacion[1]):
+            self.ganador = -1
+
+        elif (self.puntuacion[0] < self.puntuacion[1]):
+            self.ganador = 1
+        
+        else:
+            self.ganador = 0
+        
+        return self.ganador
+    
     def evaluar(self):
         aux = len(self.tablero)
         for i in self.tablero:
@@ -195,6 +221,61 @@ class Juegoreversi:
             return True
         else:
             return False
+
+
+    
+
+# def minimax(juego, etapa, secuencia, secuencias):             #PENDIENTE
+
+#     if (juego.dificultad == "Easy"):
+#         juego.dificultad = 3
+#     elif (juego.dificultad == "Normal"):
+#         juego.dificultad = 6
+#     else:
+#         juego.dificultad = 9
+
+#     #################################################################
+
+
+#     if(juego.contador_de_profundidad == juego.dificultad):  #caso base nodo "terminal"
+#         secuencias.append(secuencia.copy())
+#         return [juego.calcular_utilidad()]
+
+#     if etapa == 1: #IA
+#         valor = [np.NINF, None]
+#     else:           #US
+#         valor = [np.inf, None]
+
+#     ############### creando arbol de decisiones ###########################
+#     if(juego.contador_de_profundidad < juego.dificultad):
+#         diccionario_posibles, jugadas_posibles = juego.revisar_jugadas() ##ademas de revisar y poner la ficha hay que convertirlas y contarlas
+#         for jugada in jugadas_posibles:
+#             juego.jugar(jugada)
+#             secuencia.append(jugada)
+#             juego.contador_de_profundidad+=1
+#             opcion = minimax(juego, etapa*-1, secuencia, secuencias)
+#         #########################################################################
+
+#         #maximizar
+#         if etapa == 1:
+#             if valor[0]<opcion[0]:
+#                 valor=[opcion[0], jugada]
+#         else:
+#         #minimizar
+#             if valor[0]>opcion[0]:
+#                 valor = [opcion[0], jugada]
+#         juego.deshacer_jugada(jugada)
+#         secuencia.pop()
+#     return valor
+
+        
+        
+        
+
+
+        
+
+
 
     
     
