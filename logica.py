@@ -3,6 +3,7 @@
 #vacio = 0
 import revisarJugadas
 import convertirJugadas
+import numpy as np
 
 class Juegoreversi:
     def __init__(self, dimension, dificultad,  turno=-1):
@@ -15,9 +16,14 @@ class Juegoreversi:
         self.ganador = None
         self.diccionario = {}
         self.jugadas_posibles = []
+        self.contador_de_profundidad = 0
         
     def jugar(self, jugadax, jugaday):
         self.tablero[jugadax][jugaday] = self.jugador
+        self.jugador *= -1
+
+    def deshacer_jugada(self, jugadax, jugaday):
+        self.tablero[jugadax][jugaday] = 0
         self.jugador *= -1
 
     def reiniciar(self, dimension):
@@ -86,6 +92,23 @@ class Juegoreversi:
         else:
             self.ganador = 1
 
+
+    def calcular_utilidad(self):                      #esta funcion para calcular la utilidad
+        for i in self.tablero:
+            self.puntuacion[0] += i.count(-1)       
+            self.puntuacion[1] += i.count(1)
+        if (self.puntuacion[0] > self.puntuacion[1]):
+            self.ganador = -1
+
+        elif (self.puntuacion[0] < self.puntuacion[1]):
+            self.ganador = 1
+        
+        else:
+            self.ganador = 0
+        
+        return self.ganador
+
+
     def evaluar(self):
 
         aux = len(self.tablero)
@@ -114,3 +137,62 @@ class Juegoreversi:
     
     
 
+def minimax(juego, etapa, secuencia, secuencias):             #PENDIENTE
+
+    if (juego.dificultad == "Easy"):
+        juego.dificultad = 3
+    elif (juego.dificultad == "Normal"):
+        juego.dificultad = 6
+    elif (juego.dificultad == "Hard"):
+        juego.dificultad = 9
+
+    #################################################################
+
+
+    if(juego.contador_de_profundidad == juego.dificultad):  #caso base nodo "terminal"
+        secuencias.append(secuencia.copy())
+        return [juego.calcular_utilidad()]
+
+    if etapa == 1: #IA
+        valor = [np.NINF, None]
+    else:           #US
+        valor = [np.inf, None]
+
+    ############### creando arbol de decisiones ###########################
+    if(juego.contador_de_profundidad < juego.dificultad):
+        diccionario_posibles, jugadas_posibles = juego.revisar_jugadas() ##ademas de revisar y poner la ficha hay que convertirlas y contarlas
+        for jugada in jugadas_posibles:
+            juego.jugar(jugada)
+            jugadas_compartidas = juego.get_key((jugada[0], jugada[1]))
+            for ficha in jugadas_compartidas:
+                juego.convertirJugadas(juego, ficha, jugada[0], jugada[1], etapa)
+            secuencia.append(jugada)
+            juego.contador_de_profundidad+=1
+            opcion = minimax(juego, etapa*-1, secuencia, secuencias)
+        #########################################################################
+
+        #maximizar
+        if etapa == 1:
+            if valor[0]<opcion[0]:
+                valor=[opcion[0], jugada]
+        else:
+        #minimizar
+            if valor[0]>opcion[0]:
+                valor = [opcion[0], jugada]
+        juego.deshacer_jugada(jugada)
+        secuencia.pop()
+    return valor
+
+        
+        
+        
+
+
+        
+
+
+
+    
+    
+
+# la variable casillas es la matriz que muestra el tkinter, pero para el juego utilizaremos la lista tablero
