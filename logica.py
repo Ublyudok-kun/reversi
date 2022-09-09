@@ -4,6 +4,7 @@
 import revisarJugadas
 import convertirJugadas
 import numpy as np
+import reversi
 
 class Juegoreversi:
     def __init__(self, dimension, dificultad,  turno=-1):
@@ -26,6 +27,14 @@ class Juegoreversi:
         self.tablero[jugadax][jugaday] = 0
         self.jugador *= -1
 
+    def get_key(self, valor):
+            keys = []
+            for key, value in self.diccionario.items():
+                    if valor in value:
+                        keys.append(key)
+            return keys           
+            
+
     def reiniciar(self, dimension):
         self.tablero = self.crear_tablero(dimension)
         self.jugador = -1
@@ -46,8 +55,7 @@ class Juegoreversi:
 
         return self.tablero
 
-    def VerJugadasPosibles(self):
-        print(self.jugadas_posibles)
+    
 
     def revisar_jugadas(self):
         for a in range(self.dimension):
@@ -83,6 +91,8 @@ class Juegoreversi:
             self.tablero = convertirJugadas.convertir_inferior_izquierda(self.tablero, d[0], d[1],eventoX, eventoY, turno, self.dimension)
             self.tablero = convertirJugadas.convertir_superior_izquierda(self.tablero, d[0], d[1], eventoX, eventoY, turno, self.dimension)
 
+    #def desconvertir_jugadas(self, jugadas_compatidas, eventoX, eventoY, turno):
+
 
     def contarFichas(self):
         if self.puntuacion[0] > self.puntuacion[1]:
@@ -110,7 +120,6 @@ class Juegoreversi:
 
 
     def evaluar(self):
-
         aux = len(self.tablero)
         for i in self.tablero:
             if 0 not in i:
@@ -135,53 +144,97 @@ class Juegoreversi:
             return False
 
     
-    
+    def minimax(self, etapa, secuencia, secuencias):
 
-def minimax(juego, etapa, secuencia, secuencias):             #PENDIENTE
+        if (self.dificultad == "Easy"):
+            self.dificultad = 3
+        elif (self.dificultad == "Normal"):
+            self.dificultad = 6
+        elif (self.dificultad == "Hard"):
+            self.dificultad = 9
+        
+        if(self.contador_de_profundidad == self.dificultad):
+            secuencias.append(secuencia.copy())
+            return [self.calcular_utilidad()]
+        
+        if etapa == 1: #IA
+            valor = [np.NINF, None]
+        else:           #US
+            valor = [np.inf, None]
 
-    if (juego.dificultad == "Easy"):
-        juego.dificultad = 3
-    elif (juego.dificultad == "Normal"):
-        juego.dificultad = 6
-    elif (juego.dificultad == "Hard"):
-        juego.dificultad = 9
+        
+############################################ARBOL DE DECISIONES############################################
+        while(self.contador_de_profundidad < self.dificultad):
+            diccionario, jugadas_posibles = self.revisar_jugadas()
+            for jugada in jugadas_posibles:
+                self.jugar(jugada[0], jugada[1])
+                jugadas_compartidas = self.get_key(jugada)
+                self.convertir_jugadas(jugadas_compartidas, jugada[0], jugada[1], etapa)
+                secuencia.append(jugada)
+                self.contador_de_profundidad +=1
+                opcion = self.minimax(etapa *-1, secuencia, secuencias)
+##############################################################################################################
 
-    #################################################################
+                #MAXIMIZAR
+                if etapa == 1:
+                    if valor[0] < opcion[0]:
+                        valor=[opcion[0], jugada]
+                else:
+                #MINIMIZAR
+                    if valor[0]>opcion[0]:
+                        valor=[opcion[0], jugada]
+                #deshacer jugadas
+                self.deshacer_jugada(jugada[0], jugada[1])
+                #desconvertir fichas
+        return valor
+
+        
+
+# def minimax(juego, etapa, secuencia, secuencias):             #PENDIENTE
+
+#     if (juego.dificultad == "Easy"):
+#         juego.dificultad = 3
+#     elif (juego.dificultad == "Normal"):
+#         juego.dificultad = 6
+#     elif (juego.dificultad == "Hard"):
+#         juego.dificultad = 9
+
+#     #################################################################
 
 
-    if(juego.contador_de_profundidad == juego.dificultad):  #caso base nodo "terminal"
-        secuencias.append(secuencia.copy())
-        return [juego.calcular_utilidad()]
+#     if(juego.contador_de_profundidad == juego.dificultad):  #caso base nodo "terminal"
+#         secuencias.append(secuencia.copy())
+#         return [juego.calcular_utilidad()]
 
-    if etapa == 1: #IA
-        valor = [np.NINF, None]
-    else:           #US
-        valor = [np.inf, None]
+#     if etapa == 1: #IA
+#         valor = [np.NINF, None]
+#     else:           #US
+#         valor = [np.inf, None]
 
-    ############### creando arbol de decisiones ###########################
-    if(juego.contador_de_profundidad < juego.dificultad):
-        diccionario_posibles, jugadas_posibles = juego.revisar_jugadas() ##ademas de revisar y poner la ficha hay que convertirlas y contarlas
-        for jugada in jugadas_posibles:
-            juego.jugar(jugada)
-            jugadas_compartidas = juego.get_key((jugada[0], jugada[1]))
-            for ficha in jugadas_compartidas:
-                juego.convertirJugadas(juego, ficha, jugada[0], jugada[1], etapa)
-            secuencia.append(jugada)
-            juego.contador_de_profundidad+=1
-            opcion = minimax(juego, etapa*-1, secuencia, secuencias)
-        #########################################################################
+#     ############### creando arbol de decisiones ###########################
+#     if(juego.contador_de_profundidad < juego.dificultad):
+#         diccionario_posibles, jugadas_posibles = juego.revisar_jugadas() ##ademas de revisar y poner la ficha hay que convertirlas y contarlas
+#         for jugada in jugadas_posibles:
+#             juego.jugar(jugada[0],[1])
+#             jugadas_compartidas = juego.get_key((jugada[0], jugada[1]))
+#             for ficha in jugadas_compartidas:
+#                 juego.convertirJugadas(juego, ficha, jugada[0], jugada[1], etapa)
+#             secuencia.append(jugada)
+#             juego.contador_de_profundidad+=1
+#             opcion = minimax(juego, etapa*-1, secuencia, secuencias)
+#         #########################################################################
 
-        #maximizar
-        if etapa == 1:
-            if valor[0]<opcion[0]:
-                valor=[opcion[0], jugada]
-        else:
-        #minimizar
-            if valor[0]>opcion[0]:
-                valor = [opcion[0], jugada]
-        juego.deshacer_jugada(jugada)
-        secuencia.pop()
-    return valor
+#         #maximizar
+#         if etapa == 1:
+#             if valor[0]<opcion[0]:
+#                 valor=[opcion[0], jugada]
+#         else:
+#         #minimizar
+#             if valor[0]>opcion[0]:
+#                 valor = [opcion[0], jugada]
+#         juego.deshacer_jugada(jugada)
+#         secuencia.pop()
+#     return valor
 
         
         
