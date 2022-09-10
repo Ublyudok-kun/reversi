@@ -5,6 +5,7 @@ import revisarJugadas
 import convertirJugadas
 import numpy as np
 import reversi
+import deshacerJugadas
 
 class Juegoreversi:
     def __init__(self, dimension, dificultad,  turno=-1):
@@ -22,6 +23,7 @@ class Juegoreversi:
     def jugar(self, jugadax, jugaday):
         self.tablero[jugadax][jugaday] = self.jugador
         self.jugador *= -1
+
 
     def deshacer_jugada(self, jugadax, jugaday):
         self.tablero[jugadax][jugaday] = 0
@@ -118,6 +120,17 @@ class Juegoreversi:
         
         return self.ganador
 
+    def deshacer_jugadas(self, jugadas_compartidas, eventoX, eventoY):
+        for aux in jugadas_compartidas:
+            self.tablero = deshacerJugadas.deshacer_arriba(self.tablero, aux[0], aux[1], eventoX, eventoY)
+            self.tablero = deshacerJugadas.deshacer_abajo(self.tablero, aux[0], aux[1], eventoX, eventoY)
+            self.tablero = deshacerJugadas.deshacer_derecha(self.tablero, aux[0], aux[1], eventoX, eventoY)
+            self.tablero = deshacerJugadas.deshacer_izquierda(self.tablero, aux[0], aux[1], eventoX, eventoY)
+            self.tablero = deshacerJugadas.deshacer_diagonal_izquierda_sup(self.tablero, aux[0], aux[1], eventoX, eventoY)
+            self.tablero = deshacerJugadas.deshacer_diagonal_izquierda_inf(self.tablero, aux[0], aux[1], eventoX, eventoY)
+            self.tablero = deshacerJugadas.deshacer_diagonal_derecha_sup(self.tablero, aux[0], aux[1], eventoX, eventoY)
+            self.tablero = deshacerJugadas.deshacer_diagonal_derecha_inf(self.tablero, aux[0], aux[1], eventoX, eventoY)
+        self.tablero[eventoX][eventoY] = 0
 
     def evaluar(self):
         aux = len(self.tablero)
@@ -146,6 +159,7 @@ class Juegoreversi:
     
     def minimax(self, etapa, secuencia, secuencias):
 
+        tablero_ficticio = self.crear_tablero()
         if (self.dificultad == "Easy"):
             self.dificultad = 3
         elif (self.dificultad == "Normal"):
@@ -183,9 +197,10 @@ class Juegoreversi:
                 #MINIMIZAR
                     if valor[0]>opcion[0]:
                         valor=[opcion[0], jugada]
-                #deshacer jugadas
-                self.deshacer_jugada(jugada[0], jugada[1])
-                #desconvertir fichas
+                #deshacer jugadas y desconvertir fichas
+                deshacerJugadas.deshacer_jugadas(self.tablero, jugadas_compartidas, jugada[0], jugada[1], etapa)
+                secuencia.pop()
+                
         return valor
 
         

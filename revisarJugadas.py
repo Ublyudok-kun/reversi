@@ -111,3 +111,5 @@ def revisar_superior_izquierda(tablero, x, y, turno, dimension, jugadas_posibles
             IndexError
 
     return jugadas_posibles
+
+
